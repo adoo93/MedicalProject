@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.medical.mapper.memberMapper">
+	<!-- 회원가입 -->
+	<insert id="insertMember">
+		INSERT INTO medical.p_member(id,pw,name,postcode,addr,detailAddress,extraAddress,tel,birth,email,grade) VALUES (#{id},#{pw},#{name},#{postcode},#{addr},#{detailAddress},#{extraAddress},#{tel},#{birth},#{email},#{grade})
+	</insert>
+	<!-- 로그인 -->
+	<select id="loginMember" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM medical.p_member WHERE id=#{id} AND pw=#{pw}
+	</select>
+	<!-- 아이디 중복체크  -->
+	<select id="idCheck" resultType="int">
+		SELECT COUNT(*) FROM medical.p_member WHERE id=#{id}
+	</select>
+	
+	<!-- 이메일 중복체크  -->
+	<select id="emailCheck" resultType="int">
+		SELECT COUNT(*) FROM medical.p_member WHERE email = #{email}
+	</select>
+	
+	<!-- 아이디 찾기 -->
+	<select id="idSearch" resultType="java.lang.String">
+		SELECT id FROM p_member WHERE name=#{name} AND email=#{email}
+	</select>
+	<!-- pw 찾기 -->
+	<update id="pwSearch">
+		UPDATE p_member SET pw=#{pw} WHERE id=#{id} AND email=#{email}
+	</update>
+		<!-- pw 수정 -->
+	<update id="editPass">
+		UPDATE p_member SET pw=#{pw} WHERE id=#{id}
+	</update>
+	<!-- 정보 수정 -->
+	<update id="editMypage">
+		UPDATE medical.p_member SET pw=#{pw},postcode=#{postcode},addr=#{addr},detailAddress=#{detailAddress},extraAddress=#{extraAddress},email=#{email},tel=#{tel} WHERE id=#{id}
+	</update>
+	<!-- 회원탈퇴 -->
+	<delete id="memberDelete">
+		DELETE FROM p_member WHERE id=#{id} AND pw=#{pw}
+	</delete>
+	<!-- 정보 불러오기 -->
+	<select id="userInfo" resultType="com.medical.dto.MemberDto">
+		SELECT * FROM p_member WHERE id=#{id}
+	</select>
+	<!-- grade가 hospital인 회원만 병원 페이지에 접근 (myPage.jsp 참고) -->
+	<select id="checkGrade" resultType="java.lang.String">
+		SELECT grade FROM p_member WHERE id=#{id};
+	</select>
+	<!-- 네이버 로그인 DB담기 -->
+	<insert id="insertNaver">
+		INSERT INTO medical.p_member(id,name) VALUES (#{id},#{name})
+	</insert>
+	<!-- 네이버 로그인 아이디 중복 검사 -->
+	<select id="socialIdCheck" resultType="int">
+		SELECT COUNT(*) FROM medical.p_member WHERE id=#{id}
+	</select>
+</mapper>
